@@ -15,7 +15,7 @@ In case you fork or clone the repository, these are the following steps to run t
 2. Finally run one of the following commands: `go test` or `go test -v` for a more verbose description of each running test case.
 
 ## Documentation
-There's an online reference for the package at [godoc.org/github.com/INS368-Katas/lab4-range/numberline]
+There's an online reference for the package at [godoc.org/github.com/INS368-Katas/lab4-range/numberline](godoc.org/github.com/INS368-Katas/lab4-range/numberline)
 
 ## Author
 
