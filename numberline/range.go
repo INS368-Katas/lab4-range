@@ -149,10 +149,10 @@ func (r Range) OverlapsRange(expression string) bool {
 		log.Fatalln(err)
 	}
 
-	var aboveLowerBound bool = r.LowerBound == comparingRange.LowerBound || r.LowerBound <= comparingRange.UpperBound
-	var belowUpperBound bool = r.UpperBound == comparingRange.LowerBound || r.UpperBound >= comparingRange.UpperBound
+	var containsLowerBound bool = r.LowerBound <= comparingRange.LowerBound && r.UpperBound >= comparingRange.LowerBound
+	var containsUpperBound bool = r.LowerBound <= comparingRange.UpperBound && r.UpperBound >= comparingRange.UpperBound
 
-	if aboveLowerBound && belowUpperBound {
+	if containsLowerBound || containsUpperBound {
 		return true
 	}
 
