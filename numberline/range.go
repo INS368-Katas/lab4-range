@@ -23,15 +23,16 @@ func (r Range) NewRange(expression string) (Range, error) {
 	validLowerRange := [2]byte{40, 91}
 	validUpperRange := [2]byte{41, 93}
 
-	isLowerRange := contains(expression[0], validLowerRange)
-	isUpperRange := contains(expression[len(expression) - 1], validUpperRange)
+	var isLowerRange, isUpperRange bool
+
+	isLowerRange = contains(expression[0], validLowerRange)
+	isUpperRange = contains(expression[len(expression) - 1], validUpperRange)
 
 	if !(isLowerRange && isUpperRange) {
 		return Range{}, errInvalidRange
 	}
 
 	var isLowerBound bool = true
-
 	var lowerBound, upperBound string
 
 	for i := 1; i < len(expression) - 1; i++ {
@@ -54,11 +55,11 @@ func (r Range) NewRange(expression string) (Range, error) {
 		return Range{}, errInvalidValue
 	}
 
-	if expression[0] == 40 {
+	if expression[0] == validLowerRange[0] {
 		lowerLimit++
 	}
 
-	if expression[len(expression) - 1] == 41 {
+	if expression[len(expression) - 1] == validUpperRange[0] {
 		upperLimit--
 	}
 
@@ -91,7 +92,7 @@ func (r Range) DoesNotContain(numbers ...int) bool {
 
 }
 
-// GetAllPoints returns all the value inside Range r
+// GetAllPoints returns a slice with all the numbers inside Range r
 func (r Range) GetAllPoints() []int {
 	var points []int
 
@@ -181,7 +182,7 @@ func (r Range) Equals(expression string) bool {
 	
 }
 
-// NotEquals checks if Range r is equal to the specified expression
+// NotEquals checks if Range r is not equal to the specified expression
 func (r Range) NotEquals(expression string) bool {
 	
 	if r.Equals(expression) {
