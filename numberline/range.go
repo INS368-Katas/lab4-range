@@ -12,26 +12,27 @@ type Range struct {
 }
 
 var (
-	errInvalidRange error = errors.New("Error: Invalid range limits")
-	errInvalidValue error = errors.New("Error: Invalid value")
+	errInvalidRange error = errors.New("error: invalid range limits")
+	errInvalidValue error = errors.New("error: invalid value")
 )
 
 // NewRange creates a new instance of type Range
 func (r Range) NewRange(expression string) (Range, error) {
-	var numRange Range
 
 	validLowerRange := [2]byte{40, 91}
 	validUpperRange := [2]byte{41, 93}
 
-	var isLowerRange bool = contains(validLowerRange, expression[0])
-	var isUpperRange bool = contains(validUpperRange, expression[len(expression)-1])
+	var isLowerRange, isUpperRange bool
+
+	isLowerRange = contains(expression[0], validLowerRange)
+	isUpperRange = contains(expression[len(expression)-1], validUpperRange)
 
 	if !(isLowerRange && isUpperRange) {
-		return numRange, errInvalidRange
+		return Range{}, errInvalidRange
 	}
 
-	var lowerBound, upperBound string
 	var isLowerBound bool = true
+	var lowerBound, upperBound string
 
 	for i := 1; i < len(expression)-1; i++ {
 		if expression[i] == 44 {
@@ -45,12 +46,12 @@ func (r Range) NewRange(expression string) (Range, error) {
 
 	lowerLimit, err := strconv.Atoi(lowerBound)
 	if err != nil {
-		return numRange, errInvalidValue
+		return Range{}, errInvalidValue
 	}
 
 	upperLimit, err := strconv.Atoi(upperBound)
 	if err != nil {
-		return numRange, errInvalidValue
+		return Range{}, errInvalidValue
 	}
 
 	if expression[0] == validLowerRange[0] {
@@ -61,9 +62,8 @@ func (r Range) NewRange(expression string) (Range, error) {
 		upperLimit--
 	}
 
-	numRange = Range{lowerLimit, upperLimit}
+	return Range{lowerLimit, upperLimit}, nil
 
-	return numRange, nil
 }
 
 // Contains checks if Range r contains all of the specified numbers
@@ -76,6 +76,7 @@ func (r Range) Contains(numbers ...int) bool {
 	}
 
 	return true
+
 }
 
 // DoesNotContain checks if Range r doesn't contain all of the specified numbers
@@ -101,7 +102,7 @@ func (r Range) GetAllPoints() []int {
 
 }
 
-// ContainsRange checks if Range r contains the specified expression
+// ContainsRange checks if Range r contains the range in the specified expression
 func (r Range) ContainsRange(expression string) bool {
 	var comparingRange Range
 	var err error
@@ -111,9 +112,9 @@ func (r Range) ContainsRange(expression string) bool {
 		log.Fatalln(err)
 	}
 
-	var isInsideRange bool = r.LowerBound <= comparingRange.LowerBound && r.UpperBound >= comparingRange.UpperBound
+	var insideRange bool = r.LowerBound <= comparingRange.LowerBound && r.UpperBound >= comparingRange.UpperBound
 
-	if isInsideRange {
+	if insideRange {
 		return true
 	}
 
@@ -121,7 +122,7 @@ func (r Range) ContainsRange(expression string) bool {
 
 }
 
-// DoesNotContainRange checks if Range r doesn’t contain the specified expression
+// DoesNotContainRange checks if Range r doesn't contain the range in the specified expression
 func (r Range) DoesNotContainRange(expression string) bool {
 
 	if r.ContainsRange(expression) {
@@ -186,11 +187,12 @@ func (r Range) NotEquals(expression string) bool {
 	}
 
 	return true
+
 }
 
-func contains(byteArr [2]byte, byteChar byte) bool {
-	for _, char := range byteArr {
-		if byteChar == char {
+func contains(char byte, byteArr [2]byte) bool {
+	for i := range byteArr {
+		if char == byteArr[i] {
 			return true
 		}
 	}
