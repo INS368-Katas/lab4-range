@@ -1,9 +1,9 @@
 package numberline
 
 import (
-	"strconv"
 	"errors"
 	"log"
+	"strconv"
 )
 
 // Range data type
@@ -16,17 +16,16 @@ var (
 	errInvalidValue error = errors.New("error: invalid value")
 )
 
-
 // NewRange creates a new instance of type Range
 func (r Range) NewRange(expression string) (Range, error) {
-	
+
 	validLowerRange := [2]byte{40, 91}
 	validUpperRange := [2]byte{41, 93}
 
 	var isLowerRange, isUpperRange bool
 
 	isLowerRange = contains(expression[0], validLowerRange)
-	isUpperRange = contains(expression[len(expression) - 1], validUpperRange)
+	isUpperRange = contains(expression[len(expression)-1], validUpperRange)
 
 	if !(isLowerRange && isUpperRange) {
 		return Range{}, errInvalidRange
@@ -35,7 +34,7 @@ func (r Range) NewRange(expression string) (Range, error) {
 	var isLowerBound bool = true
 	var lowerBound, upperBound string
 
-	for i := 1; i < len(expression) - 1; i++ {
+	for i := 1; i < len(expression)-1; i++ {
 		if expression[i] == 44 {
 			isLowerBound = false
 		} else if isLowerBound {
@@ -59,18 +58,17 @@ func (r Range) NewRange(expression string) (Range, error) {
 		lowerLimit++
 	}
 
-	if expression[len(expression) - 1] == validUpperRange[0] {
+	if expression[len(expression)-1] == validUpperRange[0] {
 		upperLimit--
 	}
 
 	return Range{lowerLimit, upperLimit}, nil
 
-
 }
 
 // Contains checks if Range r contains all of the specified numbers
 func (r Range) Contains(numbers ...int) bool {
-	
+
 	for _, number := range numbers {
 		if !(r.LowerBound <= number && r.UpperBound >= number) {
 			return false
@@ -83,7 +81,7 @@ func (r Range) Contains(numbers ...int) bool {
 
 // DoesNotContain checks if Range r doesn't contain all of the specified numbers
 func (r Range) DoesNotContain(numbers ...int) bool {
-	
+
 	if r.Contains(numbers...) {
 		return false
 	}
@@ -104,7 +102,7 @@ func (r Range) GetAllPoints() []int {
 
 }
 
-// ContainsRange checks if Range r contains the range in the specified expression 
+// ContainsRange checks if Range r contains the range in the specified expression
 func (r Range) ContainsRange(expression string) bool {
 	var comparingRange Range
 	var err error
@@ -124,9 +122,9 @@ func (r Range) ContainsRange(expression string) bool {
 
 }
 
-// DoesNotContainRange checks if Range r doesn't contain the range in the specified expression 
+// DoesNotContainRange checks if Range r doesn't contain the range in the specified expression
 func (r Range) DoesNotContainRange(expression string) bool {
-	
+
 	if r.ContainsRange(expression) {
 		return false
 	}
@@ -139,7 +137,7 @@ func (r Range) DoesNotContainRange(expression string) bool {
 func (r Range) GetEndPoints() (lower, upper int) {
 	lower = r.LowerBound
 	upper = r.UpperBound
-	return 
+	return
 }
 
 // OverlapsRange checks if the lower and upper bound of the specified expression overlaps with Range r
@@ -163,7 +161,6 @@ func (r Range) OverlapsRange(expression string) bool {
 
 }
 
-
 // Equals checks if Range r is equal to the specified expression
 func (r Range) Equals(expression string) bool {
 	var comparingRange Range
@@ -179,12 +176,12 @@ func (r Range) Equals(expression string) bool {
 	}
 
 	return false
-	
+
 }
 
 // NotEquals checks if Range r is not equal to the specified expression
 func (r Range) NotEquals(expression string) bool {
-	
+
 	if r.Equals(expression) {
 		return false
 	}
@@ -192,7 +189,6 @@ func (r Range) NotEquals(expression string) bool {
 	return true
 
 }
-
 
 func contains(char byte, byteArr [2]byte) bool {
 	for i := range byteArr {

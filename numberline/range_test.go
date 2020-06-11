@@ -344,7 +344,7 @@ func TestNotEquals(t *testing.T) {
 		{input: "[3,6)", rangeTest: Range{3, 5}, want: false},
 	}
 
-	for _,test := range tests {
+	for _, test := range tests {
 		message := fmt.Sprintf("Comparing range: %v", test.input)
 		t.Run(message, func(t *testing.T) {
 			got := test.rangeTest.NotEquals(test.input)
